@@ -16,22 +16,23 @@ model User {
   password     String
   name         String
   social_login Boolean
-  created_at   String
-  updated_at   String
+  createdAt    String  @map("created_at")
+  updatedAt    String  @map("updated_at")
 
   accounts     Account[]
   transactions Transaction[]
+  Category     Category[]
 
   @@map("users")
 }
 
 model Account {
-  id         String @id @default(uuid()) @db.Uuid
-  userId     String @map("user_id") @db.Uuid
-  name       String
-  balance    Int
-  created_at String
-  updated_at String
+  id        String @id @default(uuid()) @db.Uuid
+  userId    String @map("user_id") @db.Uuid
+  name      String
+  balance   Int
+  createdAt String @map("created_at")
+  updatedAt String @map("updated_at")
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
@@ -41,8 +42,11 @@ model Account {
 
 model Category {
   id           String        @id @default(uuid()) @db.Uuid
+  userId       String        @map("user_id") @db.Uuid
   name         String
   transactions Transaction[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("categories")
 }
@@ -55,7 +59,7 @@ model Transaction {
   type        String
   description String
   value       BigInt
-  created_at  String
+  createdAt   String @map("created_at")
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
