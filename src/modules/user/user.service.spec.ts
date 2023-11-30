@@ -8,8 +8,8 @@ const user = {
     password: "$2a$12$uR09n2ZL/4HRRJLmPRWpEerUdGnjnD32//AHyWY5tQqoMaUxXsIMW",
     name: "Ed",
     social_login: false,
-    created_at: "2023-11-15T23:20:11.476Z",
-    updated_at: "2023-11-15T23:20:11.476Z",
+    createdAt: "2023-11-15T23:20:11.476Z",
+    updatedAt: "2023-11-15T23:20:11.476Z",
 }
 
 describe("UserService", () => {
