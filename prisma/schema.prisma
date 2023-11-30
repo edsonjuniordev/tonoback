@@ -29,7 +29,7 @@ model Account {
   id         String @id @default(uuid()) @db.Uuid
   userId     String @map("user_id") @db.Uuid
   name       String
-  balance    BigInt
+  balance    Int
   created_at String
   updated_at String
 
