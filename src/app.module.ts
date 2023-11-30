@@ -5,9 +5,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/auth.guard';
 import { AccountModule } from './modules/account/account.module';
 import { UserModule } from './modules/user/user.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
-  imports: [UserModule, DatabaseModule, AuthModule, AccountModule],
+  imports: [UserModule, DatabaseModule, AuthModule, AccountModule, CategoryModule],
   controllers: [],
   providers: [
     {
