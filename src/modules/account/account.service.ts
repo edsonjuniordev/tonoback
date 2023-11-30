@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { AccountRepository } from '../../shared/repositories/account.repository';
@@ -10,7 +10,7 @@ export class AccountService {
   create(userId: string, createAccountDto: CreateAccountDto) {
     const { name, balance } = createAccountDto
     const now = new Date().toISOString()
-    
+
     return this.accountRepository.create({
       data: {
         name,
@@ -22,19 +22,47 @@ export class AccountService {
     });
   }
 
-  findAll() {
-    return `This action returns all account`;
+  findAllByUserId(userId: string) {
+    return this.accountRepository.findMany({
+      where: {
+        userId
+      }
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
+  async update(accountId: string, userId: string, updateAccountDto: UpdateAccountDto) {
+
+    const isOwner = await this.accountRepository.findFirst({
+      where: { id: accountId, userId }
+    })
+
+    if (!isOwner) {
+      throw new NotFoundException("account not found")
+    }
+
+    const now = new Date().toISOString()
+
+    return this.accountRepository.update({
+      where: { id: accountId },
+      data: {
+        ...updateAccountDto,
+        updated_at: now
+      }
+    });
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
-  }
+  async delete(accountId: string, userId: string) {
+    const isOwner = await this.accountRepository.findFirst({
+      where: { id: accountId, userId }
+    })
 
-  remove(id: number) {
-    return `This action removes a #${id} account`;
+    if (!isOwner) {
+      throw new NotFoundException("account not found")
+    }
+    await this.accountRepository.delete({
+      where: { id: accountId }
+    });
+
+    return null
   }
 }
