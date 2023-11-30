@@ -16,8 +16,8 @@ export class AccountService {
         name,
         balance,
         userId,
-        created_at: now,
-        updated_at: now
+        createdAt: now,
+        updatedAt: now
       }
     });
   }
@@ -46,7 +46,7 @@ export class AccountService {
       where: { id: accountId },
       data: {
         ...updateAccountDto,
-        updated_at: now
+        updatedAt: now
       }
     });
   }

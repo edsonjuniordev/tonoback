@@ -9,8 +9,8 @@ const user = {
   password: "$2a$12$uR09n2ZL/4HRRJLmPRWpEerUdGnjnD32//AHyWY5tQqoMaUxXsIMW",
   name: "Ed",
   social_login: false,
-  created_at: "2023-11-15T23:20:11.476Z",
-  updated_at: "2023-11-15T23:20:11.476Z",
+  createdAt: "2023-11-15T23:20:11.476Z",
+  updatedAt: "2023-11-15T23:20:11.476Z",
 }
 
 const createAccountDto = new CreateAccountDto({
@@ -23,8 +23,8 @@ const account = {
   userId: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
   name: "XP Investimentos",
   balance: 100,
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString()
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 }
 
 const accountUpdated = {
@@ -32,8 +32,8 @@ const accountUpdated = {
   userId: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
   name: "XP Investimentos",
   balance: 200,
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString()
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 }
 
 describe('AccountController', () => {
