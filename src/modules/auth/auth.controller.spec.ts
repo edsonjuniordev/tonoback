@@ -57,7 +57,7 @@ describe("AuthController", () => {
         })
 
         it("should throw an exception", () => {
-            // Arrange
+            // Setup
             jest.spyOn(authService, 'signup').mockRejectedValueOnce(new Error())
             // Assert
             expect(authController.signup(signupDto)).rejects.toThrow()
@@ -73,8 +73,8 @@ describe("AuthController", () => {
             expect(authService.signin).toHaveBeenCalledTimes(1)
         })
 
-        it("should thow an exception", () => {
-            // Arrange
+        it("should throw an exception", () => {
+            // Setup
             jest.spyOn(authService, "signin").mockRejectedValueOnce(new Error())
             //Assert
             expect(authController.signin(signinDto)).rejects.toThrow()

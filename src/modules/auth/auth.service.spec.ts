@@ -69,7 +69,7 @@ describe("AuthService", () => {
 
     describe("signup", () => {
         it("should return a JWT token to user", async () => {
-            // Arrange
+            // Setup
             jest.spyOn(userRepository, 'findUnique').mockResolvedValueOnce(null)
             // Act
             const result = await authService.signup(signupDto)
@@ -82,7 +82,7 @@ describe("AuthService", () => {
         })
 
         it("should throw an exeption", () => {
-            // Arrange
+            // Setup
             jest.spyOn(authService, 'signup').mockRejectedValueOnce(new Error())
             // Assert
             expect(authService.signup(signupDto)).rejects.toThrow()
@@ -100,7 +100,7 @@ describe("AuthService", () => {
         })
 
         it("should throw an exception", () => {
-            // Arrange
+            // Setup
             jest.spyOn(authService, 'signin').mockRejectedValueOnce(new Error())
             // Act
             expect(authService.signin(signinDto)).rejects.toThrow()
