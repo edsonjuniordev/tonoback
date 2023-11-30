@@ -19,16 +19,26 @@ const createAccountDto = new CreateAccountDto({
 })
 
 const account = {
-  id: "123",
-  userId: "123",
+  id: "e40e5a88-d12f-49fb-afeb-60e373f394a4",
+  userId: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
   name: "XP Investimentos",
   balance: 100,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString()
 }
 
+const accountUpdated = {
+  id: "e40e5a88-d12f-49fb-afeb-60e373f394a4",
+  userId: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
+  name: "XP Investimentos",
+  balance: 200,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
+}
+
 describe('AccountController', () => {
   let accountController: AccountController;
+  let accountService: AccountService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,20 +48,21 @@ describe('AccountController', () => {
           provide: AccountService,
           useValue: {
             create: jest.fn().mockResolvedValue(account),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
+            findAllByUserId: jest.fn().mockResolvedValue([account]),
+            update: jest.fn().mockResolvedValue(accountUpdated),
+            delete: jest.fn().mockResolvedValue(null),
           }
         }
       ],
     }).compile();
 
     accountController = module.get<AccountController>(AccountController);
+    accountService = module.get<AccountService>(AccountService);
   });
 
   it('should be defined', () => {
     expect(accountController).toBeDefined();
+    expect(accountService).toBeDefined();
   });
 
   describe("create", () => {
@@ -60,6 +71,67 @@ describe('AccountController', () => {
       const result = await accountController.create(user.id, createAccountDto)
       // Assert
       expect(result).toEqual(account)
+      expect(accountService.create).toHaveBeenCalledTimes(1)
+    })
+
+    it("should throw an axception", () => {
+      // Setup
+      jest.spyOn(accountService, "create").mockRejectedValueOnce(new Error())
+      // Assert
+      expect(accountController.create(user.id, createAccountDto)).rejects.toThrow()
+    })
+  })
+
+  describe("findAll", () => {
+    it("should return all accounts from a user", async () => {
+      // Act
+      const result = await accountController.findAll(user.id)
+      // Assert
+      expect(result).toEqual([account])
+      expect(accountService.findAllByUserId).toHaveBeenCalledTimes(1)
+    })
+
+    it("should throw an exception", () => {
+      // Setup
+      jest.spyOn(accountService, "findAllByUserId").mockRejectedValueOnce(new Error())
+      // Assert
+      expect(accountController.findAll(user.id)).rejects.toThrow()
+    })
+  })
+
+  describe("update", () => {
+    it("should return a account updated", async () => {
+      // Setup
+      account.balance = 200
+      // Act
+      const result = await accountController.update(user.id, account.id, account)
+      // Assert
+      expect(result).toEqual(accountUpdated)
+      expect(accountService.update).toHaveBeenCalledTimes(1)
+    })
+
+    it("should throw an exception", () => {
+      // Setup
+      jest.spyOn(accountService, "update").mockRejectedValueOnce(new Error())
+      // Assert
+      expect(accountController.update(user.id, account.id, account)).rejects.toThrow()
+    })
+  })
+
+  describe("delete", () => {
+    it("should delete an user", async () => {
+      // Act
+      const result = await accountController.delete(user.id, account.id)
+      // Assert
+      expect(result).toBeNull()
+      expect(accountService.delete).toHaveBeenCalledTimes(1)
+    })
+
+    it("should throw an exception", () => {
+      // Setup
+      jest.spyOn(accountService, "delete").mockRejectedValueOnce(new Error())
+      // Assert
+      expect(accountController.delete(user.id, account.id)).rejects.toThrow()
     })
   })
 });
