@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
@@ -14,22 +14,18 @@ export class AccountController {
   }
 
   @Get()
-  findAll() {
-    return this.accountService.findAll();
+  findAll(@IsActiveUserId() userId: string) {
+    return this.accountService.findAllByUserId(userId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne(+id);
+  @Patch(':accountId')
+  update(@IsActiveUserId() userId: string, @Param('accountId') accountId: string, @Body() updateAccountDto: UpdateAccountDto) {
+    return this.accountService.update(accountId, userId, updateAccountDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountService.update(+id, updateAccountDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountService.remove(+id);
+  @Delete(':accountId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@IsActiveUserId() userId: string, @Param('accountId') accountId: string) {
+    return this.accountService.delete(accountId, userId);
   }
 }
