@@ -52,8 +52,8 @@ export class AuthService {
                 name,
                 social_login,
                 password: hashedPassword,
-                created_at: now.toISOString(),
-                updated_at: now.toISOString()
+                createdAt: now.toISOString(),
+                updatedAt: now.toISOString()
             }
         })
 
