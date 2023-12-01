@@ -18,6 +18,10 @@ export class AccountRepository {
         return this.prismaService.account.findFirst(findFirstArgs)
     }
 
+    findUnique(findUniqueArgs: Prisma.AccountFindUniqueArgs) {
+        return this.prismaService.account.findUnique(findUniqueArgs)
+    }
+
     update(updateArgs: Prisma.AccountUpdateArgs) {
         return this.prismaService.account.update(updateArgs)
     }
