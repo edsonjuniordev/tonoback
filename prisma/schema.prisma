@@ -58,7 +58,7 @@ model Transaction {
   categoryId  String @map("category_id") @db.Uuid
   type        String
   description String
-  value       BigInt
+  value       Int
   createdAt   String @map("created_at")
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
