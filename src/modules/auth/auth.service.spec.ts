@@ -4,6 +4,7 @@ import { UserRepository } from "../../shared/repositories/user.repository"
 import { JwtService } from "@nestjs/jwt"
 import { SignupDto } from "./dto/signup.dto"
 import { SigninDto } from "./dto/signin.dto"
+import { ConflictException, UnauthorizedException } from "@nestjs/common"
 
 const accessToken = {
     access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNDBlNWE4OC1kMTJmLTQ5ZmItYWZlYi02MGUzNzNmMzk0YTMiLCJpYXQiOjE3MDA1MDUwNzAsImV4cCI6MTcwMTEwOTg3MH0.kSulgpb-z5dSNc1h58BTN_kARvKs_wCaZNRylTJD-3A"
@@ -69,7 +70,7 @@ describe("AuthService", () => {
     describe("signup", () => {
         it("should return a JWT token to user", async () => {
             // Setup
-            jest.spyOn(userRepository, 'findUnique').mockResolvedValueOnce(null)
+            jest.spyOn(userRepository, "findUnique").mockResolvedValueOnce(null)
             // Act
             const result = await authService.signup(signupDto)
             // Assert
@@ -80,9 +81,17 @@ describe("AuthService", () => {
             
         })
 
+        it("should throw an conflict exception", () => {
+            // Setup
+            const conflictException = new ConflictException("email already in use")
+            jest.spyOn(userRepository, "findUnique").mockResolvedValueOnce(user)
+            // Assert
+            expect(authService.signup(signupDto)).rejects.toEqual(conflictException)
+        })
+
         it("should throw an exeption", () => {
             // Setup
-            jest.spyOn(authService, 'signup').mockRejectedValueOnce(new Error())
+            jest.spyOn(authService, "signup").mockRejectedValueOnce(new Error())
             // Assert
             expect(authService.signup(signupDto)).rejects.toThrow()
         })
@@ -98,9 +107,17 @@ describe("AuthService", () => {
             expect(jwtService.signAsync).toHaveBeenCalledTimes(1)
         })
 
+        it("should throw an unauthorized exception", () => {
+            // Setup
+            const unauthorizedException = new UnauthorizedException("invalid credentials")
+            jest.spyOn(userRepository, "findUnique").mockResolvedValueOnce(null)
+            // Assert
+            expect(authService.signin(signinDto)).rejects.toEqual(unauthorizedException)
+        })
+
         it("should throw an exception", () => {
             // Setup
-            jest.spyOn(authService, 'signin').mockRejectedValueOnce(new Error())
+            jest.spyOn(authService, "signin").mockRejectedValueOnce(new Error())
             // Act
             expect(authService.signin(signinDto)).rejects.toThrow()
         })
