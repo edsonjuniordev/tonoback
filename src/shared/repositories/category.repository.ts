@@ -13,4 +13,8 @@ export class CategoryRepository {
     findMany(findManyArgs: Prisma.CategoryFindManyArgs) {
         return this.prismaService.category.findMany(findManyArgs);
     }
+
+    findUnique(findUniqueArgs: Prisma.CategoryFindUniqueArgs) {
+        return this.prismaService.category.findUnique(findUniqueArgs);
+    }
 }
