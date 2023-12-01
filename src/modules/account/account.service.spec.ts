@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountService } from './account.service';
 import { AccountRepository } from '../../shared/repositories/account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
+import { NotFoundException } from '@nestjs/common';
 
 const user = {
   id: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
@@ -110,6 +111,14 @@ describe('AccountService', () => {
       expect(accountRepository.update).toHaveBeenCalledTimes(1);
     })
 
+    it("should throw an account not found error", () => {
+      // Setup
+      const notFoundException = new NotFoundException("account not found")
+      jest.spyOn(accountRepository, "findFirst").mockResolvedValueOnce(null);
+      // Assert
+      expect(accountService.update(account.id, user.id, account)).rejects.toEqual(notFoundException)
+    })
+
     it("should throw an error", () => {
       // Setup
       jest.spyOn(accountRepository, "update").mockRejectedValueOnce(new Error());
@@ -125,6 +134,14 @@ describe('AccountService', () => {
       // Assert
       expect(result).toBeNull()
       expect(accountRepository.delete).toHaveBeenCalledTimes(1);
+    })
+
+    it("should throw an not found account exception", () => {
+      // Setup
+      const notFoundException = new NotFoundException("account not found")
+      jest.spyOn(accountRepository, "findFirst").mockResolvedValueOnce(null);
+      // Assert
+      expect(accountService.delete(account.id, user.id)).rejects.toEqual(notFoundException)
     })
 
     it("should throw an error", () => {
