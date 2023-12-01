@@ -4,6 +4,7 @@ import { TransactionRepository } from '../../shared/repositories/transaction.rep
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { AccountRepository } from '../../shared/repositories/account.repository';
 import { CategoryRepository } from '../../shared/repositories/category.repository';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 const user = {
   id: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
@@ -62,9 +63,9 @@ describe('TransactionService', () => {
         {
           provide: TransactionRepository,
           useValue: {
-            create: jest.fn().mockReturnValue(createTransactionDto),
-            findMany: jest.fn().mockReturnValue([transaction]),
-            findUnique: jest.fn().mockReturnValue(transaction)
+            create: jest.fn().mockResolvedValue(createTransactionDto),
+            findMany: jest.fn().mockResolvedValue([transaction]),
+            findUnique: jest.fn().mockResolvedValue(transaction)
           },
         },
         {
@@ -104,6 +105,39 @@ describe('TransactionService', () => {
       expect(transactionRepository.create).toHaveBeenCalledTimes(1);
     })
 
+    it("should throw an account not found exception", () => {
+      // Setup
+      const notFoundException = new NotFoundException("account not found")
+      jest.spyOn(accountRepository, "findUnique").mockResolvedValueOnce(null);
+      // Assert
+      expect(transactionService.create(user.id, createTransactionDto)).rejects.toEqual(notFoundException)
+    })
+
+    it("should throw a category not found exception", () => {
+      // Setup
+      const notFoundException = new NotFoundException("category not found")
+      jest.spyOn(categoryRepository, "findUnique").mockResolvedValueOnce(null);
+      // Assert
+      expect(transactionService.create(user.id, createTransactionDto)).rejects.toEqual(notFoundException)
+    })
+
+    it("should throw a insuficient balance bad request exception", () => {
+      // Setup
+      createTransactionDto.value = 150
+      const badRequestException = new BadRequestException("insuficient balance")
+      // Assert
+      expect(transactionService.create(user.id, createTransactionDto)).rejects.toEqual(badRequestException)
+      createTransactionDto.value = 100
+    })
+
+    it("should throw a transaction not created exception", () => {
+      // Setup
+      const notCreatedException = new BadRequestException("transaction not created")
+      jest.spyOn(transactionRepository, "create").mockResolvedValueOnce(null);
+      // Assert
+      expect(transactionService.create(user.id, createTransactionDto)).rejects.toEqual(notCreatedException)
+    })
+
     it("should throw an exception", () => {
       // Setup
       jest.spyOn(accountRepository, "findUnique").mockRejectedValueOnce(new Error());
@@ -136,6 +170,14 @@ describe('TransactionService', () => {
       // Assert
       expect(result).toEqual(transaction);
       expect(transactionRepository.findUnique).toHaveBeenCalledTimes(1);
+    })
+
+    it("should throw a transaction not found exception", () => {
+      // Setup
+      const notFoundException = new NotFoundException("transaction not found")
+      jest.spyOn(transactionRepository, "findUnique").mockResolvedValueOnce(null);
+      // Assert
+      expect(transactionService.findOneByIdAndUserId(transaction.id, user.id)).rejects.toEqual(notFoundException)
     })
 
     it("should throw an exception", () => {
