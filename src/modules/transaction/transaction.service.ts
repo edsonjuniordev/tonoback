@@ -74,8 +74,8 @@ export class TransactionService {
     });
   }
 
-  findOneByIdAndUserId(transactionId: string, userId: string) {
-    const isOwner = this.transactionRepository.findUnique({
+  async findOneByIdAndUserId(transactionId: string, userId: string) {
+    const isOwner = await this.transactionRepository.findUnique({
       where: {
         id: transactionId,
         userId
