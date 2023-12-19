@@ -50,7 +50,7 @@ export class AuthService {
             data: {
                 email,
                 name,
-                social_login,
+                social_login: social_login || true,
                 password: hashedPassword,
                 createdAt: now.toISOString(),
                 updatedAt: now.toISOString()
