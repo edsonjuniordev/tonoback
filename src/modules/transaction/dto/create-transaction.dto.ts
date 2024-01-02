@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString, IsUUID } from "class-validator";
+import { TransactionType } from "../entities/transaction";
 
 export class CreateTransactionDto {
     constructor(createTransactionDto?: CreateTransactionDto) {
@@ -7,6 +8,7 @@ export class CreateTransactionDto {
         this.type = createTransactionDto?.type
         this.description = createTransactionDto?.description
         this.value = createTransactionDto?.value
+        this.transactionDate = createTransactionDto?.transactionDate
     }
 
     @IsNotEmpty()
@@ -19,7 +21,7 @@ export class CreateTransactionDto {
 
     @IsString()
     @IsNotEmpty()
-    type: string;
+    type: TransactionType;
 
     @IsString()
     @IsNotEmpty()
@@ -28,4 +30,8 @@ export class CreateTransactionDto {
     @IsNumber()
     @IsNotEmpty()
     value: number;
+
+    @IsString()
+    @IsNotEmpty()
+    transactionDate: string;
 }

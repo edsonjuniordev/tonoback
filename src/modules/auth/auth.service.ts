@@ -53,7 +53,27 @@ export class AuthService {
                 social_login: social_login || false,
                 password: hashedPassword,
                 createdAt: now.toISOString(),
-                updatedAt: now.toISOString()
+                updatedAt: now.toISOString(),
+                categories: {
+                    createMany: {
+                        data: [
+                            // Income
+                            { name: 'Salário', type: 'IN' },
+                            { name: 'Freelance', type: 'IN' },
+                            { name: 'Outro', type: 'IN' },
+                            // Expense
+                            { name: 'Casa', type: 'OUT' },
+                            { name: 'Alimentação', type: 'OUT' },
+                            { name: 'Educação', type: 'OUT' },
+                            { name: 'Lazer', type: 'OUT' },
+                            { name: 'Mercado', type: 'OUT' },
+                            { name: 'Roupas', type: 'OUT' },
+                            { name: 'Transporte', type: 'OUT' },
+                            { name: 'Viagem', type: 'OUT' },
+                            { name: 'Outro', type: 'OUT' },
+                        ],
+                    },
+                },
             }
         })
 

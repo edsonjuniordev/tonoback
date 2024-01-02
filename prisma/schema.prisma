@@ -21,18 +21,28 @@ model User {
 
   accounts     Account[]
   transactions Transaction[]
-  Category     Category[]
+  categories   Category[]
 
   @@map("users")
 }
 
+enum AccountType {
+  CHECKING
+  INVESTMENT
+  CASH
+
+  @@map("account_type")
+}
+
 model Account {
-  id        String @id @default(uuid()) @db.Uuid
-  userId    String @map("user_id") @db.Uuid
+  id        String      @id @default(uuid()) @db.Uuid
+  userId    String      @map("user_id") @db.Uuid
   name      String
   balance   Int
-  createdAt String @map("created_at")
-  updatedAt String @map("updated_at")
+  color     String
+  type      AccountType
+  createdAt String      @map("created_at")
+  updatedAt String      @map("updated_at")
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
@@ -41,9 +51,10 @@ model Account {
 }
 
 model Category {
-  id           String        @id @default(uuid()) @db.Uuid
-  userId       String        @map("user_id") @db.Uuid
+  id           String          @id @default(uuid()) @db.Uuid
+  userId       String          @map("user_id") @db.Uuid
   name         String
+  type         TransactionType
   transactions Transaction[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -51,15 +62,23 @@ model Category {
   @@map("categories")
 }
 
+enum TransactionType {
+  IN
+  OUT
+
+  @@map("transaction_type")
+}
+
 model Transaction {
-  id          String @id @default(uuid()) @db.Uuid
-  userId      String @map("user_id") @db.Uuid
-  accountId   String @map("account_id") @db.Uuid
-  categoryId  String @map("category_id") @db.Uuid
-  type        String
-  description String
-  value       Int
-  createdAt   String @map("created_at")
+  id              String          @id @default(uuid()) @db.Uuid
+  userId          String          @map("user_id") @db.Uuid
+  accountId       String          @map("account_id") @db.Uuid
+  categoryId      String?         @map("category_id") @db.Uuid
+  type            TransactionType
+  description     String
+  value           Int
+  transactionDate String          @map("transaction_date")
+  createdAt       String          @map("created_at")
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)

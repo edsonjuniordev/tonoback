@@ -6,10 +6,11 @@ import { CategoryRepository } from '../../shared/repositories/category.repositor
 export class CategoryService {
   constructor(private readonly categoryRepository: CategoryRepository) { }
   create(userId: string, createCategoryDto: CreateCategoryDto) {
-    const { name } = createCategoryDto
+    const { name, type } = createCategoryDto
     return this.categoryRepository.create({
       data: {
         name,
+        type,
         userId
       }
     });

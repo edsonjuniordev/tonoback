@@ -3,13 +3,14 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionRepository } from '../../shared/repositories/transaction.repository';
 import { AccountRepository } from '../../shared/repositories/account.repository';
 import { CategoryRepository } from '../../shared/repositories/category.repository';
+import { TransactionType } from './entities/transaction';
 
 @Injectable()
 export class TransactionService {
   constructor(private readonly transactionRepository: TransactionRepository, private readonly accountRepository: AccountRepository, private readonly categoryRepository: CategoryRepository) { }
 
   async create(userId: string, createTransactionDto: CreateTransactionDto) {
-    const { accountId, categoryId, description, type, value } = createTransactionDto
+    const { accountId, categoryId, description, type, value, transactionDate } = createTransactionDto
 
     const isOwner = await this.accountRepository.findUnique({
       where: {
@@ -44,12 +45,13 @@ export class TransactionService {
         description,
         type,
         value,
+        transactionDate,
         createdAt: new Date().toISOString(),
       }
     })
 
     if (transaction) {
-      const transactionValue = type === "in" ? isOwner.balance + value : isOwner.balance - value
+      const transactionValue = type === TransactionType.IN ? isOwner.balance + value : isOwner.balance - value
 
       await this.accountRepository.update({
         where: {
