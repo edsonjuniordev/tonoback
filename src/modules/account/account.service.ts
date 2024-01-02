@@ -8,7 +8,7 @@ export class AccountService {
   constructor(private readonly accountRepository: AccountRepository) { }
 
   create(userId: string, createAccountDto: CreateAccountDto) {
-    const { name, balance } = createAccountDto
+    const { name, balance, color, type } = createAccountDto
     const now = new Date().toISOString()
 
     return this.accountRepository.create({
@@ -16,6 +16,8 @@ export class AccountService {
         name,
         balance,
         userId,
+        color,
+        type,
         createdAt: now,
         updatedAt: now
       }
