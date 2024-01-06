@@ -33,7 +33,7 @@ export class TransactionService {
       throw new NotFoundException("category not found")
     }
 
-    if (value > isOwner.balance) {
+    if (type === TransactionType.OUT && value > isOwner.balance) {
       throw new BadRequestException("insuficient balance")
     }
 
