@@ -77,7 +77,7 @@ model Transaction {
   type            TransactionType
   description     String
   value           Int
-  transactionDate String          @map("transaction_date")
+  transactionDate DateTime        @map("transaction_date")
   createdAt       String          @map("created_at")
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
