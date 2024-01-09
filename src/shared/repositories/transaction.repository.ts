@@ -17,4 +17,16 @@ export class TransactionRepository {
     findUnique(findUniqueArgs: Prisma.TransactionFindUniqueArgs) {
         return this.prismaService.transaction.findUnique(findUniqueArgs)
     }
+
+    findFirst(findFirstArgs: Prisma.CategoryFindFirstArgs) {
+        return this.prismaService.category.findFirst(findFirstArgs)
+    }
+
+    update(updateArgs: Prisma.TransactionUpdateArgs) {
+        return this.prismaService.transaction.update(updateArgs)
+    }
+
+    delete(deleteArgs: Prisma.TransactionDeleteArgs) {
+        return this.prismaService.transaction.delete(deleteArgs)
+    }
 }

@@ -17,4 +17,8 @@ export class CategoryRepository {
     findUnique(findUniqueArgs: Prisma.CategoryFindUniqueArgs) {
         return this.prismaService.category.findUnique(findUniqueArgs);
     }
+
+    findFirst(findFirstArgs: Prisma.CategoryFindFirstArgs) {
+        return this.prismaService.category.findFirst(findFirstArgs)
+    }
 }
