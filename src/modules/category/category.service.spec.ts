@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CategoryService } from './category.service';
+import { CategoryService } from './services/category.service';
 import { CategoryRepository } from '../../shared/repositories/category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';
 
