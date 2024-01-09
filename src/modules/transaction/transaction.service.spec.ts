@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionService } from './transaction.service';
+import { TransactionService } from './services/transaction.service';
 import { TransactionRepository } from '../../shared/repositories/transaction.repository';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { AccountRepository } from '../../shared/repositories/account.repository';
