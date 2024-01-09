@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
-import { AccountRepository } from '../../shared/repositories/account.repository';
+import { CreateAccountDto } from '../dto/create-account.dto';
+import { UpdateAccountDto } from '../dto/update-account.dto';
+import { AccountRepository } from '../../../shared/repositories/account.repository';
+import { ValidateAccountOwnershipService } from './validate-account-ownership.service';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly accountRepository: AccountRepository) { }
+  constructor(private readonly accountRepository: AccountRepository, private readonly validateAccountOwnershipService: ValidateAccountOwnershipService) { }
 
   create(userId: string, createAccountDto: CreateAccountDto) {
     const { name, balance, color, type } = createAccountDto
@@ -28,19 +29,24 @@ export class AccountService {
     return this.accountRepository.findMany({
       where: {
         userId
+      },
+      orderBy: {
+        createdAt: "asc"
       }
     });
   }
 
+  findOneById(accountId: string) {
+    return this.accountRepository.findUnique({
+      where: {
+        id: accountId
+      }
+    })
+  }
+
   async update(accountId: string, userId: string, updateAccountDto: UpdateAccountDto) {
 
-    const isOwner = await this.accountRepository.findFirst({
-      where: { id: accountId, userId }
-    })
-
-    if (!isOwner) {
-      throw new NotFoundException("account not found")
-    }
+    await this.validateAccountOwnershipService.validate(userId, accountId)
 
     const now = new Date().toISOString()
 
@@ -54,13 +60,8 @@ export class AccountService {
   }
 
   async delete(accountId: string, userId: string) {
-    const isOwner = await this.accountRepository.findFirst({
-      where: { id: accountId, userId }
-    })
+    await this.validateAccountOwnershipService.validate(userId, accountId)
 
-    if (!isOwner) {
-      throw new NotFoundException("account not found")
-    }
     await this.accountRepository.delete({
       where: { id: accountId }
     });

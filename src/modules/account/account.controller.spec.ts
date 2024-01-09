@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AccountController } from './account.controller';
-import { AccountService } from './account.service';
+import { AccountService } from './services/account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 
 const user = {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AccountService } from './account.service';
+import { AccountService } from './services/account.service';
 import { AccountRepository } from '../../shared/repositories/account.repository';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { NotFoundException } from '@nestjs/common';
