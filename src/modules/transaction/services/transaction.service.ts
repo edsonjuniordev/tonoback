@@ -99,8 +99,12 @@ export class TransactionService {
       categoryId,
       transactionId,
     });
+    
+    const transaction = await this.transactionRepository.findFirst({
+      where: { id: transactionId, userId }
+    })
 
-    return this.transactionRepository.update({
+    const transactionUpdated = await this.transactionRepository.update({
       where: { id: transactionId },
       data: {
         accountId,
@@ -111,9 +115,28 @@ export class TransactionService {
         value
       },
     });
+
+    if (transactionUpdated) {
+      const userAccount = await this.accountRepository.findUnique({
+        where: {
+          id: accountId
+        }
+      })
+      const accountBalance = transaction.type === TransactionType.IN ? userAccount.balance - transaction.value : userAccount.balance + transaction.value
+      const balanceValue = type === TransactionType.IN ? accountBalance + value : accountBalance - value
+
+      await this.accountRepository.update({
+        where: {
+          id: accountId
+        },
+        data: {
+          balance: balanceValue
+        }
+      })
+    }
   }
 
-  async remove(userId: string, transactionId: string) {
+  async delete(userId: string, transactionId: string) {
     await this.validateEntitiesOwnership({ userId, transactionId });
 
     await this.transactionRepository.delete({

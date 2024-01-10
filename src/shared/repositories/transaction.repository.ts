@@ -18,8 +18,8 @@ export class TransactionRepository {
         return this.prismaService.transaction.findUnique(findUniqueArgs)
     }
 
-    findFirst(findFirstArgs: Prisma.CategoryFindFirstArgs) {
-        return this.prismaService.category.findFirst(findFirstArgs)
+    findFirst(findFirstArgs: Prisma.TransactionFindFirstArgs) {
+        return this.prismaService.transaction.findFirst(findFirstArgs)
     }
 
     update(updateArgs: Prisma.TransactionUpdateArgs) {
