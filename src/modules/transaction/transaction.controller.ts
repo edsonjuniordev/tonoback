@@ -27,7 +27,7 @@ export class TransactionController {
   }
 
   @Put(':transactionId')
-  update(@IsActiveUserId() userId: string, @Param('transactionId') transactionId: string, updateTransactionDto: UpdateTransactionDto) {
+  update(@IsActiveUserId() userId: string, @Param('transactionId') transactionId: string, @Body() updateTransactionDto: UpdateTransactionDto) {
     return this.transactionService.update(userId, transactionId, updateTransactionDto)
   }
 

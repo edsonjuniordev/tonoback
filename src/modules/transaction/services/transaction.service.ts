@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from '../dto/create-transaction.dto';
 import { TransactionRepository } from '../../../shared/repositories/transaction.repository';
 import { TransactionType } from '../entities/transaction';
@@ -47,7 +47,7 @@ export class TransactionService {
         }
       })
     } else {
-      throw new BadRequestException("transaction not created")
+      throw new InternalServerErrorException("internal server error")
     }
 
     return transaction;
@@ -133,15 +133,39 @@ export class TransactionService {
           balance: balanceValue
         }
       })
+
+      return transactionUpdated
+    } else {
+      throw new InternalServerErrorException("internal server error")
     }
   }
 
-  async delete(userId: string, transactionId: string) {
+  async delete(transactionId: string, userId: string) {
     await this.validateEntitiesOwnership({ userId, transactionId });
 
-    await this.transactionRepository.delete({
+    const transactionDeleted = await this.transactionRepository.delete({
       where: { id: transactionId },
     });
+
+    if (transactionDeleted) {
+      const userAccount = await this.accountRepository.findUnique({
+        where: {
+          id: transactionDeleted.accountId
+        }
+      })
+      const accountBalance = transactionDeleted.type === TransactionType.IN ? userAccount.balance - transactionDeleted.value : userAccount.balance + transactionDeleted.value
+
+      await this.accountRepository.update({
+        where: {
+          id: transactionDeleted.accountId
+        },
+        data: {
+          balance: accountBalance
+        }
+      })
+    } else {
+      throw new InternalServerErrorException("internal server error")
+    }
 
     return null;
   }
