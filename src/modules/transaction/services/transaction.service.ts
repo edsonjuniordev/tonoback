@@ -136,14 +136,19 @@ export class TransactionService {
   }
 
   async delete(transactionId: string, userId: string) {
-    const [, isAccountOwner] = await this.validateEntitiesOwnership({ userId, transactionId });
+    await this.validateEntitiesOwnership({ userId, transactionId });
 
     const transactionDeleted = await this.transactionRepository.delete({
       where: { id: transactionId },
     });
 
     if (transactionDeleted) {
-      const accountBalance = transactionDeleted.type === TransactionType.IN ? isAccountOwner.balance - transactionDeleted.value : isAccountOwner.balance + transactionDeleted.value
+      const userAccount = await this.accountRepository.findUnique({
+        where: {
+          id: transactionDeleted.accountId
+        }
+      })
+      const accountBalance = transactionDeleted.type === TransactionType.IN ? userAccount.balance - transactionDeleted.value : userAccount.balance + transactionDeleted.value
 
       await this.accountRepository.update({
         where: {
