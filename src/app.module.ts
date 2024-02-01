@@ -9,12 +9,13 @@ import { CategoryModule } from './modules/category/category.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { env } from './shared/config/env';
+import { EmailModule } from './modules/email/email.module';
 
 @Module({
   imports: [UserModule, DatabaseModule, AuthModule, AccountModule, CategoryModule, TransactionModule, ThrottlerModule.forRoot([{
     ttl: env.rateLimitTTL,
     limit: env.rateLimitRequests,
-  }])],
+  }]), EmailModule],
   controllers: [],
   providers: [
     {

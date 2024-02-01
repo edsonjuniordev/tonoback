@@ -1,13 +1,14 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt'
 import { SigninDto } from './dto/signin.dto';
 import { SignupDto } from './dto/signup.dto';
 import { UserRepository } from '../../shared/repositories/user.repository';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly userRepository: UserRepository, private readonly jwtService: JwtService) { }
+    constructor(private readonly userRepository: UserRepository, private readonly jwtService: JwtService, private readonly emailService: EmailService) { }
 
     async signin(singinDto: SigninDto) {
         const { email, password } = singinDto
@@ -77,11 +78,38 @@ export class AuthService {
             }
         })
 
-        const accessToken = await this.generateAccessToken(userCreated.id)
+        const { success, error } = await this.emailService.sendAccountVerification(userCreated.email, userCreated.name, userCreated.id)
+
+        if (!success) {
+            throw new BadRequestException(error)
+        }
 
         return {
-            access_token: accessToken
+            message: "a message has been sent to your email"
         };
+    }
+
+    async accountVerification(userId: string) {
+        const user = await this.userRepository.findUnique({
+            where: {
+                id: userId
+            }
+        })
+
+        if (!user) {
+            throw new BadRequestException("user not found")
+        }
+
+        await this.userRepository.update({
+            where: {
+                id: userId
+            },
+            data: {
+                verified: true
+            }
+        })
+
+        return null
     }
 
     generateAccessToken(userId: string): Promise<String> {

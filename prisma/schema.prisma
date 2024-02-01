@@ -16,6 +16,7 @@ model User {
   password     String
   name         String
   social_login Boolean
+  verified     Boolean @default(false)
   createdAt    String  @map("created_at")
   updatedAt    String  @map("updated_at")
 

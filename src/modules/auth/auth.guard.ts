@@ -4,10 +4,11 @@ import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { env } from "src/shared/config/env";
 import { IS_PUBLIC_KEY } from "src/shared/decorators/is.public";
+import { UserRepository } from "../../shared/repositories/user.repository";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService, private reflector: Reflector) { }
+  constructor(private jwtService: JwtService, private reflector: Reflector, private readonly userRepository: UserRepository) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getClass(), context.getHandler()])
@@ -26,9 +27,19 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: env.jwtSecret
       })
+      const user = await this.userRepository.findUnique({
+        where: {
+          id: payload.sub
+        }
+      })
+      if (!user) {
+        throw new Error("user not exists")
+      }
+      if (!user.verified) {
+        throw new UnauthorizedException()
+      }
       request["userId"] = payload.sub
     } catch (error) {
-
       throw new UnauthorizedException()
     }
     return true
