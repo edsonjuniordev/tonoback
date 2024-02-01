@@ -13,6 +13,16 @@ class Env {
     rateLimitTTL: number;
 
     rateLimitRequests: number;
+
+    emailHost: string;
+
+    emailUserSecret: string;
+
+    emailPassSecret: string;
+
+    emailSender: string;
+
+    emailSubject: string;
 }
 
 export const env: Env = plainToInstance(Env, {
@@ -20,7 +30,12 @@ export const env: Env = plainToInstance(Env, {
     port: process.env.PORT,
     origin: process.env.ORIGIN,
     rateLimitTTL: Number(process.env.RATE_LIMIT_TTL),
-    rateLimitRequests: Number(process.env.RATE_LIMIT_REQUESTS)
+    rateLimitRequests: Number(process.env.RATE_LIMIT_REQUESTS),
+    emailHost: process.env.EMAIL_HOST,
+    emailUserSecret: process.env.EMAIL_USER_SECRET,
+    emailPassSecret: process.env.EMAIL_PASS_SECRET,
+    emailSender: process.env.EMAIL_SENDER,
+    emailSubject: process.env.EMAIL_SUBJECT,
 })
 
 const erros = validateSync(env)
