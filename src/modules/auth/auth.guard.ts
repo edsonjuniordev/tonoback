@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
       if (!user) {
         throw new Error("user not exists")
       }
-      if (!user.verified) {
+      if (!user.verified && !payload.account_verification) {
         throw new UnauthorizedException()
       }
       request["userId"] = payload.sub
