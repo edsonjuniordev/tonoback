@@ -21,7 +21,7 @@ export class EmailService {
             
             Para concluir o processo de criação de conta e garantir a segurança da sua conta, precisamos que você clique no link abaixo para confirmar seu endereço de e-mail:
             
-            tonored.com.br/account-confirmation?token=${token}
+            tonored.com.br/account-verification?token=${token}
             
             Certifique-se de clicar no link acima dentro das próximas 24 horas. Se você não reconhecer esta atividade, por favor, entre em contato conosco imediatamente.
             
@@ -41,6 +41,6 @@ export class EmailService {
     }
 
     private async generateJWT(userId: string) {
-        return this.jwtService.signAsync({ sub: userId })
+        return this.jwtService.signAsync({ sub: userId, account_verification: true })
     }
 }
