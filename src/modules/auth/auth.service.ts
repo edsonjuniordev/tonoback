@@ -112,6 +112,21 @@ export class AuthService {
         return null
     }
 
+    async sendEmailToUsers() {
+        const users = await this.userRepository.findMany({
+            where: {
+                verified: false,
+            }
+        })
+
+        for (const user of users) {
+            this.emailService.sendAccountVerification(user.email, user.name, user.id)
+            console.log("email sent to user: ", user.name)
+        }
+
+        return null
+    }
+
     generateAccessToken(userId: string): Promise<String> {
         return this.jwtService.signAsync({ sub: userId })
     }

@@ -10,6 +10,10 @@ export class UserRepository {
         return this.prismaService.user.create(createArgs)
     }
 
+    findMany(findManyArgs: Prisma.UserFindManyArgs) {
+        return this.prismaService.user.findMany(findManyArgs)
+    }
+
     findUnique(findUniqueArgs: Prisma.UserFindUniqueArgs) {
         return this.prismaService.user.findUnique(findUniqueArgs)
     } 
