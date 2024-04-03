@@ -26,4 +26,11 @@ export class AuthController {
   accountVerification(@IsActiveUserId() userId: string) {
     return this.authService.accountVerification(userId)
   }
+
+  @IsPublic()
+  @Post('send-email')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  sendEmailToUsers() {
+    return this.authService.sendEmailToUsers()
+  }
 }
