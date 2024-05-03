@@ -5,6 +5,7 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { AccountRepository } from '../../shared/repositories/account.repository';
 import { CategoryRepository } from '../../shared/repositories/category.repository';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { TransactionType } from './entities/transaction';
 
 const user = {
   id: "e40e5a88-d12f-49fb-afeb-60e373f394a3",
@@ -34,8 +35,9 @@ const category = {
 const createTransactionDto = new CreateTransactionDto({
   accountId: "e40e5a88-d12f-49fb-afeb-60e373f394a4",
   categoryId: "e40e5a88-d12f-49fb-afeb-60e373f394a5",
-  type: "deposit",
   description: "Deposito",
+  transactionDate: new Date().toISOString(),
+  type: TransactionType.IN,
   value: 100
 })
 
