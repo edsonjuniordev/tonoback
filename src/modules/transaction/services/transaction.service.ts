@@ -53,8 +53,8 @@ export class TransactionService {
     return transaction;
   }
 
-  findAllByUserId(userId: string, filters: { month: number, year: number, accountId?: string, type?: TransactionType }) {
-    return this.transactionRepository.findMany({
+  async findAllByUserId(userId: string, filters: { month: number, year: number, accountId?: string, type?: TransactionType }) {
+    const transactions = await this.transactionRepository.findMany({
       where: {
         userId,
         accountId: filters.accountId,
@@ -68,6 +68,20 @@ export class TransactionService {
         transactionDate: 'desc'
       }
     });
+    
+    const transactionsValue = transactions.reduce((acc, transaction) => {
+      if (transaction.type === TransactionType.IN) acc.inValue += transaction.value
+      if (transaction.type === TransactionType.OUT) acc.outValue += transaction.value
+      return acc
+    }, {
+      inValue: 0,
+      outValue: 0
+    })
+    
+    return {
+      transactionsValue,
+      transactions
+    }
   }
 
   async findOneByIdAndUserId(transactionId: string, userId: string) {
