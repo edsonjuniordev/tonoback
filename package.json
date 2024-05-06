@@ -62,12 +62,16 @@
     "typescript": "^5.1.3"
   },
   "jest": {
+    "moduleNameMapper": {
+      "@application/(.*)": "<rootDir>/src/application/$1",
+      "@package/(.*)": "<rootDir>/src/package/$1"
+    },
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
