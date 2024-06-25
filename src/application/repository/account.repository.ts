@@ -1,9 +1,10 @@
-import { Account } from "../domain/entities/account.entity";
+import { Account, AccountType } from "../domain/entities/account.entity";
 
 export interface AccountRepository {
   create(account: Account): Promise<void>;
-  findById(id: string): Promise<Account>;
+  findById(id: string, userId: string): Promise<Account>;
   update(account: Account): Promise<void>;
   findByUserId(userId: string): Promise<Account[]>;
-  delete(id: string): Promise<void>;
+  findByUserIdAndType(userId: string, type: AccountType): Promise<Account[]>;
+  delete(id: string, userId: string): Promise<void>;
 }

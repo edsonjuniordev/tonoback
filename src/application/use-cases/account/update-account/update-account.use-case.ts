@@ -16,12 +16,13 @@ export class UpdateAccountUseCase implements UseCase<UpdateAccountInputDto, Upda
 
   public async execute({
     id,
+    userId,
     balance,
     color,
     name,
     type,
   }: UpdateAccountInputDto): Promise<UpdateAccountOutputDto> {
-    const account = await this.accountRepository.findById(id);
+    const account = await this.accountRepository.findById(id, userId);
 
     if (!account) throw new AccountNotFoundException(`Account ${id} not found`);
 

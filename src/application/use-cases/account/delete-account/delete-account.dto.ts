@@ -6,6 +6,7 @@ export type DeleteAccountBuildDto = {
 
 export type DeleteAccountInputDto = {
   id: string;
+  userId: string;
 }
 
 export type DeleteAccountOutputDto = void;

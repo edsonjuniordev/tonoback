@@ -1,4 +1,4 @@
-import { UUIDGenerator } from "../../../package/uuid-generator";
+import { UUIDGenerator } from "@package/uuid-generator";
 
 export type UserProps = {
   id: string;

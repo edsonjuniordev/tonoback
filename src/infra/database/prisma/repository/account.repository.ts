@@ -1,4 +1,4 @@
-import { Account } from "@application/domain/entities/account.entity";
+import { Account, AccountType } from "@application/domain/entities/account.entity";
 import { AccountRepository } from "@application/repository/account.repository";
 import { PrismaService } from "@infra/database/prisma/prisma.service";
 import { CreateAccountMapper } from "./mappers/create-account.mapper";
@@ -32,10 +32,11 @@ export class AccountRepositoryAdapter implements AccountRepository {
     return entities
   }
 
-  public async findById(id: string): Promise<Account> {
+  public async findById(id: string, userId: string): Promise<Account> {
     const aModel = await this.prismaService.account.findUnique({
       where: {
-        id
+        id,
+        userId
       }
     })
 
@@ -50,11 +51,25 @@ export class AccountRepositoryAdapter implements AccountRepository {
     await this.prismaService.account.update(args);
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(id: string, userId: string): Promise<void> {
     await this.prismaService.account.delete({
       where: {
-        id
+        id,
+        userId
       }
     });
+  }
+
+  public async findByUserIdAndType(userId: string, type: AccountType): Promise<Account[]> {
+    const models = await this.prismaService.account.findMany({
+      where: {
+        userId,
+        type
+      }
+    })
+
+    const entities = FindByUserIdMapper.map(models)
+
+    return entities;
   }
 }

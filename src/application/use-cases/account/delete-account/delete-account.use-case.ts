@@ -15,12 +15,13 @@ export class DeleteAccountUseCase implements UseCase<DeleteAccountInputDto, Dele
   }
 
   public async execute({
-    id
+    id,
+    userId
   }: DeleteAccountInputDto): Promise<void> {
-    const account = await this.accountRepository.findById(id);
+    const account = await this.accountRepository.findById(id, userId);
 
     if (!account) throw new AccountNotFoundException(`Account ${id} not found`);
 
-    await this.accountRepository.delete(id);
+    await this.accountRepository.delete(id, userId);
   }
 }

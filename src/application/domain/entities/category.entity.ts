@@ -1,4 +1,4 @@
-import { UUIDGenerator } from "../../../package/uuid-generator";
+import { UUIDGenerator } from "@package/uuid-generator";
 import { TransactionType } from "./transaction.entity";
 
 export type CategoryProps = {

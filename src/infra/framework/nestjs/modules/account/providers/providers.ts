@@ -8,6 +8,11 @@ import { UpdateAccountUseCaseProvider } from "./use-cases/update-account.provide
 import { UpdateAccountUseCase } from "@application/use-cases/account/update-account/update-account.use-case";
 import { DeleteAccountUseCase } from "@application/use-cases/account/delete-account/delete-account.use-case";
 import { DeleteAccountUseCaseProvider } from "./use-cases/delete-account.provider";
+import { GetUserAccountsByTypeUseCase } from "@application/use-cases/account/get-user-accounts-by-type/get-user-accounts-by-type.use-case";
+import { GetUserAccountsByTypeUseCaseProvider } from "./use-cases/get-user-accounts-by-type.provider";
+import { SimpleAccountBalancePercentage } from "@application/use-cases/account/strategies/account-balance-percentage.strategy";
+import { GetAccountByIdUseCaseProvider } from "./use-cases/get-account-by-id.provider";
+import { GetAccountByIdUseCase } from "@application/use-cases/account/get-account-by-id/get-account-by-id.use-case";
 
 const createAccountUseCase: Provider = {
   provide: CreateAccountUseCase,
@@ -29,9 +34,24 @@ const deleteAccountUseCase: Provider = {
   useClass: DeleteAccountUseCaseProvider
 }
 
+const getUserAccountsByTypeUseCase: Provider = {
+  provide: GetUserAccountsByTypeUseCase,
+  useClass: GetUserAccountsByTypeUseCaseProvider
+}
+
 const accountRepository: Provider = {
   provide: 'AccountRepository',
   useClass: AccountRepositoryAdapter
+}
+
+const accountBalancePercentage: Provider = {
+  provide: 'AccountBalancePercentage',
+  useClass: SimpleAccountBalancePercentage
+}
+
+const getAccountById: Provider = {
+  provide: GetAccountByIdUseCase,
+  useClass: GetAccountByIdUseCaseProvider
 }
 
 export const providers = [
@@ -39,5 +59,8 @@ export const providers = [
   getUserAccountsUseCase,
   updateAccountUseCase,
   deleteAccountUseCase,
-  accountRepository
+  getUserAccountsByTypeUseCase,
+  accountRepository,
+  accountBalancePercentage,
+  getAccountById
 ]

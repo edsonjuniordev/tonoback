@@ -1,4 +1,4 @@
-import { UUIDGenerator } from "../../../package/uuid-generator";
+import { UUIDGenerator } from "@package/uuid-generator";
 
 export enum AccountType {
   CHECKING = "CHECKING",

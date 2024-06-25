@@ -10,6 +10,7 @@ export type UpdateAccountInputDto = {
   name: string;
   balance: number;
   color: string;
+  userId: string;
   type: AccountType;
 }
 

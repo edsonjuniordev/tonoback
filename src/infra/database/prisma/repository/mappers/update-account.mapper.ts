@@ -14,7 +14,8 @@ export class UpdateAccountMapper {
   }: Account): Prisma.AccountUpdateArgs {
     const args: Prisma.AccountUpdateArgs = {
       where: {
-        id
+        id,
+        userId
       },
       data: {
         id,

@@ -2,16 +2,17 @@ import { AccountRepository } from "@application/repository/account.repository"
 import { AccountType } from "@application/domain/entities/account.entity";
 import { AccountBalancePercentage } from "@application/domain/strategies/account-balance-percentage.strategy";
 
-export type GetUserAccountsBuildDto = {
+export type GetUserAccountsByTypeBuildDto = {
   accountRepository: AccountRepository
   accountBalancePercentageStrategy: AccountBalancePercentage
 }
 
-export type GetUserAccountsInputDto = {
+export type GetUserAccountsByTypeInputDto = {
   userId: string;
+  type: AccountType
 }
 
-export type GetUserAccountsOutputDto = {
+export type GetUserAccountsByTypeOutputDto = {
   accountsAmount: number;
   accounts: {
     id: string;

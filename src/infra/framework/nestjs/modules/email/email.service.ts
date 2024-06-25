@@ -1,6 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { env } from '../../../../../package/config/env';
+import { env } from '@package/config/env';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
